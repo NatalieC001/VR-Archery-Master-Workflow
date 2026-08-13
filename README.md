@@ -1,78 +1,101 @@
-# 🎯 VR Archery Master Workflow & Universal Generic Workflow Framework for Unity
+# 🎯 VR Archery Master Workflow & Universal Unity Learning Tool Suite
 
-An interactive, dyslexia-friendly, timestamped **Unity Editor Assistant** built for VR archery mechanics, hand interactions, socket inventories, and XR development. Combined with a **Universal Generic Workflow Engine** that lets you convert any YouTube tutorial transcript or raw notes into a fully interactive Unity workflow window with timestamped links and progress tracking.
+This repository delivers two distinct tools for Unity developers:
+1. **The VR Archery & Hands Master Workflow**: A complete, pre-populated interactive workflow for building VR Archery.
+2. **The Generic Workflow Engine**: A universal, distraction-free engine to learn *anything* in Unity step-by-step from YouTube.
 
 ---
 
-## 📁 Repository Directory Structure
+# 🎯 Core Productivity Features & Benefits
+
+- **Personal Notes & Troubleshooting Log**: Dedicated text boxes under every step AND at the top of the window (`📝 Global Project Notes & Troubleshooting Log`) where you can type your own fixes (e.g. Oculus Link Room OpenXR settings fix). Notes save automatically to `EditorPrefs`!
+- **Search Integration**: Your custom notes and troubleshooting fixes are fully indexed by the real-time search bar.
+- **Granular Timestamp Completion**: Status buttons next to every timestamp (`[ ▶ MM:SS ] [ ◯ Mark ] / [ ✓ Done ]`) so you can watch a video segment and mark it as viewed.
+- **Dual-Level Progress Tracking**: Visual progress bar tracking both overall step completion and individual timestamp completion (`% complete`).
+- **Stop Wasting Hours on YouTube**: Never spend hours scrubbing through long YouTube videos trying to remember where you left off or getting lost in video recommendations.
+- **Persistent Progress**: Your completed steps, timestamp ticks, and custom notes are automatically saved across Unity Editor sessions (`EditorPrefs`).
+- **100% Selectable Plain Text**: Highlight and copy (`Ctrl+C`) any step title, note, or gotcha for your own documentation or AI assistance.
+
+---
+
+# 🏹 PART 1: VR Archery & Hands Master Workflow
+
+This tool is a dedicated Unity Editor window built to guide you step-by-step through creating a complete VR Archery game in Unity. It synthesizes and organizes video tutorials from top creators into a single interactive checklist directly inside Unity.
+
+### 🌟 Key Features
+- **6 Structured Sections**:
+  - **Section 1**: Project Setup, XRIT 3.0 Packages & Hand Animations (*GameDev Blueprint*)
+  - **Section 2**: VR Bow Mechanics, Handle Setup & String Pull Constraints (*Sunny Valley Studio P1 & P2*)
+  - **Section 3**: Bow Strength Remapping Math & Nocked Arrow Visualization (*Sunny Valley Studio P3*)
+  - **Section 4**: Arrow Projectile Physics, Flight Trajectory & Target Sticking (*Sunny Valley Studio P4 & P5*)
+  - **Section 5**: Quiver Sockets, Shoulder Attachment & Auto-Spawning Arrows (*Miniieee*)
+  - **Section 6**: Meta Quest Hardware Controller Face Buttons & 3D Spatial Audio (*SpatialXR & Sunny Valley*)
+- **Clickable Video Timestamps with Status Buttons**: Click `[ ▶ MM:SS ]` to watch and `[ ✓ Done ]` to mark viewed.
+- **Personal Notes & Troubleshooting Foldouts**: Add your own notes to any step.
+- **Matching GitHub Repos**: Quick access buttons to matching source code repositories for each tutorial.
+
+### 🕹️ How to Open
+In Unity, go to: **`Tools ➔ VR Archery Master Workflow`**
+
+---
+
+# ⚙️ PART 2: The Generic Workflow Engine (Learn Anything in Unity!)
+
+Beyond the VR Archery implementation, this repository includes an abstract, reusable tool suite created to save time, eliminate browser tab-switching distractions, and provide a dyslexia-friendly learning environment.
+
+You can extend this tool to **any topic you want to achieve in Unity**—whether it's shaders, multiplayer, procedural generation, UI, or animation!
+
+### 🚀 Key Components
+
+1. **Generic Workflow Assistant Window (`Tools ➔ Generic Workflow Assistant Window`)**:
+   - Renders modular `WorkflowGuideAsset` files for any subject.
+   - Tracks your learning progress with visual progress bars saved across Unity sessions.
+   - Includes real-time keyword search to filter your tutorial notes & personal troubleshooting logs instantly.
+
+2. **Dyslexia-Friendly Raw Text Importer (`Tools ➔ Workflow Raw Text Importer`)**:
+   - Automatically converts raw video transcripts or notes into interactive Unity workflow assets with zero manual data entry.
+
+3. **Selectable AI Prompt Template**:
+   - Built-in prompt template with generic `[MM:SS]` timestamp placeholders. Highlight, copy (`Ctrl+C`), and paste it into AI chat (ChatGPT, Gemini, Claude) along with any YouTube transcript to format your custom tutorial guide instantly.
+
+---
+
+## 📖 How to Create a Custom Workflow for Any YouTube Tutorial
+
+```
+[ YouTube Video / Transcript ] 
+            │
+            ▼
+[ Copy Built-in AI Prompt Template ] ➔ [ Paste into AI Chat ]
+            │
+            ▼
+[ Paste AI Output into Importer Window ] ➔ [ Click "Generate Workflow Guide Asset" ]
+            │
+            ▼
+[ Open in Unity & Learn Step-by-Step! ]
+```
+
+1. Open **`Tools ➔ Workflow Raw Text Importer (Dyslexia-Friendly)`**.
+2. Select & copy (`Ctrl+C`) the **AI Prompt Template** displayed in the window.
+3. Paste the prompt and your YouTube video transcript/description into AI chat.
+4. Paste the AI response into the text importer box and click **⚡ Generate Workflow Guide Asset**.
+5. Assign your newly created `.asset` file into **`Tools ➔ Generic Workflow Assistant Window`**!
+
+---
+
+## 📁 Repository File Layout
 
 ```
 VR-Archery-Master-Workflow/
 ├── Editor/
-│   ├── VRArcheryWorkflowWindow.cs         # Part 1: Dedicated VR Archery Master Workflow Window
-│   ├── GenericWorkflowWindow.cs           # Part 2: Universal Generic Workflow Assistant Engine
-│   ├── WorkflowGuideAsset.cs              # Data Schema for Custom ScriptableObject Guides
-│   ├── WorkflowTextImporterWindow.cs      # Raw Text & Timestamp Auto-Importer Tool (Dyslexia-Friendly)
-│   └── VRArcheryWorkflowAssetGenerator.cs # Sample Guide Generator Utility
+│   ├── VRArcheryWorkflowWindow.cs         # Part 1: Dedicated VR Archery Master Workflow
+│   ├── GenericWorkflowWindow.cs           # Part 2: Universal Generic Workflow Engine
+│   ├── WorkflowGuideAsset.cs              # Data Schema for Custom Guides
+│   └── WorkflowTextImporterWindow.cs      # Raw Text & Timestamp Auto-Importer Tool
 └── README.md
 ```
 
 ---
 
-## ✨ Features
-
-### 🏹 Part 1: VR Archery Master Workflow (`VRArcheryWorkflowWindow.cs`)
-- **6 Comprehensive Sections** covering complete VR archery development from blank project setup to final audio creaks and Quest controller button bindings:
-  1. **Blank Project Setup, XRIT 3.0 Packages & Hand Animations** (GameDev Blueprint)
-  2. **VR Bow Mechanics, Handle Setup & String Constraints** (Sunny Valley Studio Parts 1 & 2)
-  3. **Bow Strength Remapping Math & Nocked Arrow Visualization** (Sunny Valley Studio Part 3)
-  4. **Arrow Projectile Physics, Flight Curves & Target Sticking** (Sunny Valley Studio Parts 4 & 5)
-  5. **VR Sockets, Back Quiver & Auto-Spawning Arrows** (Miniieee Primary Sockets)
-  6. **Meta Quest Hardware Buttons & 3D Pitch Creak Audio** (SpatialXR & Sunny Valley Part 5)
-- **100% Selectable Text Fields** for easy copying into AI assistants or custom documentation.
-- **Direct YouTube Timestamp Integration** (▶ buttons open exact video seconds with sanitized URLs).
-- **Step & Timestamp Checklists** (`✓ Done` / `◯ Mark`) with automatic progress tracking saved in `EditorPrefs`.
-- **Missed Steps & Technical Gotchas** foldouts highlighting common unity/VR hardware bugs.
-- **Global & Step-Level Personal Notes** for saving custom troubleshooting solutions.
-
-### 🌐 Part 2: Universal Generic Workflow Framework (`GenericWorkflowWindow.cs` & `WorkflowGuideAsset.cs`)
-- Data-driven workflow engine powered by Unity `ScriptableObject` assets (`WorkflowGuideAsset`).
-- Import and swap custom tutorial guides for any topic (VR, Multiplayer, Shaders, UI).
-- Real-time search filter searching step titles, descriptions, gotchas, timestamps, and personal notes.
-- Included sample generator (`VRArcheryWorkflowAssetGenerator.cs`) for instant testing.
-
-### 🤖 Part 3: Dyslexia-Friendly AI Text & Timestamp Importer (`WorkflowTextImporterWindow.cs`)
-- Built-in **AI Prompt Template** to paste into ChatGPT/Claude to automatically structure YouTube video descriptions or raw notes.
-- Auto-parses timestamps (`[MM:SS]`, `HH:MM:SS`, or `MM:SS`) and automatically generates YouTube URLs with `&t=...s` parameters.
-- Automatic YouTube URL cleaning and sanitization preventing double timestamp parameter corruption.
-- One-click asset generation (`.asset`) saved directly into your project.
-
----
-
-## 🚀 Installation into your Unity Project
-
-1. Copy the `VR-Archery-Master-Workflow` folder (or just the `Editor/` folder) into your Unity project under `Assets/` (e.g., `Assets/Tools/VR-Archery-Master-Workflow/`).
-2. Allow Unity to compile the C# scripts.
-3. Access all tools from the top menu bar in Unity:
-   - **`Tools > VR Archery Master Workflow`**
-   - **`Tools > Generic Workflow Assistant Window`**
-   - **`Tools > Workflow Raw Text Importer (Dyslexia-Friendly)`**
-   - **`Tools > Generate Sample VR Archery Guide Asset`**
-
----
-
-## 🎥 Primary Tutorial & Code References
-
-- **GameDev Blueprint**: [How to make a VR Game in Unity 6 Under 60m](https://www.youtube.com/watch?v=ofjPCrh0ZIk)
-- **Sunny Valley Studio**: [VR Archery in Unity 2022 Full Playlist](https://www.youtube.com/watch?v=j1jLkra5DRU&list=PLcRSafycjWFf8ayYlaVYRFbVnoIcgVY3N)
-- **Miniieee**: [VR Sockets and Grabbable Items in Unity 6](https://www.youtube.com/watch?v=sxyspcd6zO8)
-- **SpatialXR**: [How To Get Controller Button Input](https://www.youtube.com/watch?v=43ZZfKAOPzk)
-- **NatalieC001 Repositories**:
-  - Starter Fork: [VRTutorialXRInteractionToolkit3x](https://github.com/NatalieC001/VRTutorialXRInteractionToolkit3x)
-  - Archery Fork: [VR-Archery-in-Unity-2022](https://github.com/NatalieC001/VR-Archery-in-Unity-2022)
-
----
-
-## 📄 License
-
-MIT License. Free for personal and commercial Unity VR projects!
+## 📜 License
+MIT License - Free to use and extend in personal and commercial Unity projects.
