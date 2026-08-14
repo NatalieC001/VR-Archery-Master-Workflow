@@ -7,6 +7,10 @@ using UnityEngine;
 
 namespace GenericWorkflow.Editor
 {
+        /// <summary>
+    /// Editor window that imports raw text and generates WorkflowGuideAsset files.
+    /// Use Tools > Workflow Raw Text Importer (Dyslexia-Friendly) to open.
+    /// </summary>
     public class WorkflowTextImporterWindow : EditorWindow
     {
         private string guideTitle = "VR Tutorial Workflow Guide";
