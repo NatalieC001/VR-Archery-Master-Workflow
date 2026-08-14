@@ -83,17 +83,31 @@ You can extend this tool to **any topic you want to achieve in Unity**—whether
 
 ---
 
-## 📁 Repository File Layout
+# Saving Images and Notes in Unity ScriptableObjects
 
-```
-VR-Archery-Master-Workflow/
-├── Editor/
-│   ├── VRArcheryWorkflowWindow.cs         # Part 1: Dedicated VR Archery Master Workflow
-│   ├── GenericWorkflowWindow.cs           # Part 2: Universal Generic Workflow Engine
-│   ├── WorkflowGuideAsset.cs              # Data Schema for Custom Guides
-│   └── WorkflowTextImporterWindow.cs      # Raw Text & Timestamp Auto-Importer Tool
-└── README.md
-```
+This repository contains a proof-of-concept (PoC) for an Editor tool in Unity that allows users to save screenshots (images) and text notes for various steps of a process, storing them inside a `ScriptableObject`.
+
+## Approach
+
+In Unity Editor, you can store references to assets (like textures or sprites) inside a `ScriptableObject`. 
+
+### The ScriptableObject (`ProcessStepData.cs`)
+
+We define a `ScriptableObject` that holds a list of "Steps". Each step has:
+- A `string` for notes.
+- A `Texture2D` for the image/screenshot.
+
+### The Editor Window (`ProcessStepWindow.cs`)
+
+An Editor Window can be created to view, add, edit, and click through these steps.
+It will read from the `ScriptableObject` and display the images using `GUILayout.Label(texture)`.
+
+## Limitations & Best Practices
+
+1. **Asset References vs. Raw Image Data:** In Editor, you typically store a reference to an existing `Texture2D` asset (saved in your Project). If you are capturing screenshots on the fly inside the Editor, you must save them to disk (e.g., as `.png` files via `File.WriteAllBytes`), import them into Unity using `AssetDatabase.Refresh()`, and then assign the imported `Texture2D` to your `ScriptableObject`.
+2. **Runtime vs Editor:** `ScriptableObject` data changes made at runtime in a built game will *not* be saved. If you intend this to be a tool used by players in a built game, you must save the images to the `Application.persistentDataPath` as `.png` files and save a JSON file referencing the paths and notes. 
+
+This repository focuses on the **Editor** tool approach as requested.
 
 ---
 
