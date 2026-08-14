@@ -18,12 +18,7 @@ public class ProcessStepWindow : EditorWindow
     {
         GUILayout.Label("Process Step Viewer", EditorStyles.boldLabel);
 
-        EditorGUI.BeginChangeCheck();
         data = (ProcessStepData)EditorGUILayout.ObjectField("Step Data", data, typeof(ProcessStepData), false);
-        if (EditorGUI.EndChangeCheck())
-        {
-            selectedStepIndex = -1;
-        }
 
         if (data == null)
         {
@@ -99,11 +94,11 @@ public class ProcessStepWindow : EditorWindow
             EditorGUI.BeginChangeCheck();
 
             // Store values in temporaries so we can record Undo properly
-            string newStepName = EditorGUILayout.TextField("Step Name", selectedStep.stepName ?? "");
+            string newStepName = EditorGUILayout.TextField("Step Name", selectedStep.stepName);
 
             // Notes
             GUILayout.Label("Notes", EditorStyles.boldLabel);
-            string newNotes = EditorGUILayout.TextArea(selectedStep.notes ?? "", GUILayout.MinHeight(60));
+            string newNotes = EditorGUILayout.TextArea(selectedStep.notes, GUILayout.MinHeight(60));
 
             // Screenshot
             GUILayout.Label("Screenshot", EditorStyles.boldLabel);
@@ -115,9 +110,8 @@ public class ProcessStepWindow : EditorWindow
                 GUILayout.Space(10);
                 
                 // Calculate aspect ratio to fit the image properly in the window
-                float safeHeight = Mathf.Max(1f, selectedStep.screenshot.height);
-                float aspect = (float)selectedStep.screenshot.width / safeHeight;
-                float displayWidth = Mathf.Max(1f, position.width - 240); // Approx window width minus sidebar and padding
+                float aspect = (float)selectedStep.screenshot.width / selectedStep.screenshot.height;
+                float displayWidth = position.width - 240; // Approx window width minus sidebar and padding
                 float displayHeight = displayWidth / aspect;
 
                 // Optional limit max height
@@ -151,7 +145,6 @@ public class ProcessStepWindow : EditorWindow
                 data.steps.RemoveAt(selectedStepIndex);
                 selectedStepIndex = -1; // Reset selection
                 EditorUtility.SetDirty(data);
-                GUIUtility.ExitGUI();
             }
 
             EditorGUILayout.EndScrollView();
