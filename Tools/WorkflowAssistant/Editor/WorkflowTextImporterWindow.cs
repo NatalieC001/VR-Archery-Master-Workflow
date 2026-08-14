@@ -160,7 +160,7 @@ Section 3: Audio & Haptic Vibrations
         {
             if (string.IsNullOrEmpty(rawText))
             {
-                EditorGUILayout.DisplayDialog("Error", "Please paste some raw text or timestamps first!", "OK");
+                EditorUtility.DisplayDialog("Error", "Please paste some raw text or timestamps first!", "OK");
                 return;
             }
 
