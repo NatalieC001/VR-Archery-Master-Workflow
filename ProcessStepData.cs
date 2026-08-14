@@ -4,9 +4,9 @@ using UnityEngine;
 [System.Serializable]
 public class ProcessStep
 {
-    public string stepName;
+    public string stepName = "";
     [TextArea(3, 10)]
-    public string notes;
+    public string notes = "";
     public Texture2D screenshot;
 }
 
