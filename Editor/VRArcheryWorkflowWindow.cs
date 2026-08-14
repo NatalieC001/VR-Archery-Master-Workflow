@@ -667,7 +667,7 @@ namespace VRArcheryWorkflow.Editor
                 }
 
                 EditorGUILayout.Space(5);
-                string linkKey = $"VRArchery_Global_{step.id}_CustomLink";
+                string linkKey = $"VRArchery_{step.id}_CustomLink";
                 string currentLink = EditorPrefs.GetString(linkKey, "");
 
                 EditorGUILayout.BeginHorizontal();
@@ -684,7 +684,7 @@ namespace VRArcheryWorkflow.Editor
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.Space(5);
-                string imgKey = $"VRArchery_Global_{step.id}_ImagePath";
+                string imgKey = $"VRArchery_{step.id}_ImagePath";
                 string currentImgPath = EditorPrefs.GetString(imgKey, "");
                 Texture2D loadedImg = null;
 
