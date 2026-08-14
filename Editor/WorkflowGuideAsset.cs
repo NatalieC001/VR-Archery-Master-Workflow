@@ -68,6 +68,10 @@ namespace GenericWorkflow.Editor
         public List<WorkflowPhaseData> phases = new List<WorkflowPhaseData>();
         public List<WorkflowStepData> steps = new List<WorkflowStepData>();
 
+        [Header("Raw Transcript")]
+        [TextArea(5, 10)]
+        public string rawTranscript = "";
+
         public List<WorkflowStepData> GetStepsByPhase(int phaseNum)
         {
             return steps.FindAll(s => s.phaseNumber == phaseNum);

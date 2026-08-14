@@ -88,56 +88,48 @@ Section 3: Audio & Haptic Vibrations
 
             EditorGUILayout.Space(10);
             
-            // SELECTABLE AI PROMPT TEMPLATE BOX FOR DYSLEXIA / AI ASSISTANCE
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            showAiPromptFoldout = EditorGUILayout.Foldout(showAiPromptFoldout, "AI Prompt Template (Highlight & Ctrl+C to Copy for AI)", true, EditorStyles.foldoutHeader);
-            
+            showAiPromptFoldout = EditorGUILayout.Foldout(showAiPromptFoldout, "🤖 AI Formatting Prompt Template (Click to Expand)", true, EditorStyles.foldoutHeader);
             if (showAiPromptFoldout)
             {
-                EditorGUILayout.HelpBox("Select and copy (Ctrl+C) the prompt template below to paste into AI chat when analyzing YouTube tutorials:", MessageType.None);
-                EditorGUILayout.TextArea(aiPromptTemplate, EditorStyles.textField, GUILayout.Height(180), GUILayout.ExpandWidth(true));
+                EditorGUILayout.TextArea(aiPromptTemplate, GUILayout.Height(150));
             }
-            EditorGUILayout.EndVertical();
 
-            EditorGUILayout.Space(10);
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField("Recommended Format Example:", EditorStyles.boldLabel);
+            EditorGUILayout.Space(15);
+            EditorGUILayout.LabelField("Guide Metadata", EditorStyles.boldLabel);
             
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Load Format Example into Importer Box", GUILayout.Height(26)))
-            {
-                LoadExampleFormat();
-            }
-            if (GUILayout.Button("Clear Box", GUILayout.Width(80), GUILayout.Height(26)))
-            {
-                rawText = "";
-            }
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndVertical();
-
-            EditorGUILayout.Space(10);
+            EditorGUILayout.BeginVertical(GUI.skin.box);
             guideTitle = EditorGUILayout.TextField("Guide Title:", guideTitle);
             creatorName = EditorGUILayout.TextField("Creator Name:", creatorName);
             videoTitle = EditorGUILayout.TextField("Video Title:", videoTitle);
-            mainVideoUrl = EditorGUILayout.TextField("Video YouTube URL:", mainVideoUrl);
-            githubRepoUrl = EditorGUILayout.TextField("GitHub Repo URL (Optional):", githubRepoUrl);
+            mainVideoUrl = EditorGUILayout.TextField("Video URL:", mainVideoUrl);
+            githubRepoUrl = EditorGUILayout.TextField("GitHub Repo URL:", githubRepoUrl);
+            EditorGUILayout.EndVertical();
 
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Paste Raw Text / Video Description Here:", EditorStyles.boldLabel);
+            EditorGUILayout.Space(15);
+            EditorGUILayout.LabelField("Paste Raw Text Here (Timestamps, Markdown, AI Output):", EditorStyles.boldLabel);
 
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(200));
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(250));
             rawText = EditorGUILayout.TextArea(rawText, GUILayout.ExpandHeight(true));
             EditorGUILayout.EndScrollView();
 
-            EditorGUILayout.Space(15);
-
-            if (GUILayout.Button("Generate Workflow Guide Asset", GUILayout.Height(42)))
+            EditorGUILayout.Space(20);
+            
+            GUI.backgroundColor = new Color(0.2f, 0.8f, 0.2f);
+            if (GUILayout.Button("⚡ Generate Workflow Guide Asset", GUILayout.Height(42)))
             {
                 GenerateAssetFromRawText();
             }
+            GUI.backgroundColor = Color.white;
+            
+            EditorGUILayout.Space(10);
+            
+            if (GUILayout.Button("Load Demo Format", GUILayout.Height(30)))
+            {
+                LoadDemoFormat();
+            }
         }
 
-        private void LoadExampleFormat()
+        private void LoadDemoFormat()
         {
             guideTitle = "VR Interaction & Physics Masterclass";
             creatorName = "Sunny Valley Studio";
@@ -168,7 +160,7 @@ Section 3: Audio & Haptic Vibrations
         {
             if (string.IsNullOrEmpty(rawText))
             {
-                EditorUtility.DisplayDialog("Error", "Please paste some raw text or timestamps first!", "OK");
+                EditorGUILayout.DisplayDialog("Error", "Please paste some raw text or timestamps first!", "OK");
                 return;
             }
 
@@ -176,6 +168,7 @@ Section 3: Audio & Haptic Vibrations
             asset.guideTitle = string.IsNullOrEmpty(guideTitle) ? "Generated Workflow Guide" : guideTitle;
             asset.guideSubtitle = $"Interactive tutorial workflow assistant for {videoTitle} by {creatorName}";
             asset.uniqueGuideId = "Guide_" + Guid.NewGuid().ToString().Substring(0, 8);
+            asset.rawTranscript = rawText;
 
             string cleanMainVideoUrl = CleanYouTubeUrl(mainVideoUrl);
 
@@ -193,24 +186,11 @@ Section 3: Audio & Haptic Vibrations
 
             string[] lines = rawText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            int currentPhaseNum = 1;
-            WorkflowPhaseData currentPhase = new WorkflowPhaseData { phaseNumber = 1, phaseTitle = "Section 1: General Setup & Overview" };
-            asset.phases.Add(currentPhase);
-
-            WorkflowStepData currentStep = new WorkflowStepData
-            {
-                id = "Step_1_1",
-                phaseNumber = 1,
-                stepTitle = "Step 1.1: Core Tutorial Steps & Timestamps",
-                description = "Follow along with the timestamped steps below. Highlight any text to copy!"
-            };
-
-            CreatorBreakdownData creatorBreakdown = new CreatorBreakdownData
-            {
-                creatorName = creatorName,
-                videoTitle = videoTitle,
-                githubUrl = githubRepoUrl
-            };
+            int currentPhaseNum = 0;
+            WorkflowPhaseData currentPhase = null;
+            WorkflowStepData currentStep = null;
+            CreatorBreakdownData creatorBreakdown = null;
+            int fallbackPhaseNum = 1;
 
             foreach (string line in lines)
             {
@@ -220,36 +200,49 @@ Section 3: Audio & Haptic Vibrations
                 Match phaseMatch = phaseRegex.Match(trimmed);
                 if (phaseMatch.Success)
                 {
-                    if (creatorBreakdown.timestamps.Count > 0)
+                    if (currentStep != null && creatorBreakdown != null && creatorBreakdown.timestamps.Count > 0)
                     {
                         currentStep.creatorBreakdowns.Add(creatorBreakdown);
                         asset.steps.Add(currentStep);
                     }
 
-                    if (int.TryParse(phaseMatch.Groups[1].Value, out int parsedPhase))
+                    int parsedPhase = fallbackPhaseNum;
+                    if (int.TryParse(phaseMatch.Groups[1].Value, out int regexPhase))
                     {
-                        currentPhaseNum = parsedPhase;
+                        parsedPhase = regexPhase;
+                        fallbackPhaseNum = parsedPhase + 1;
                     }
                     else
                     {
-                        currentPhaseNum++;
+                        parsedPhase = fallbackPhaseNum++;
                     }
-
+                    
+                    // Don't add a duplicate phase if one with the same number already exists.
+                    // Instead, we just reuse the phase number for the new step if it was a duplicate "Section X".
+                    currentPhaseNum = parsedPhase;
+                    bool phaseExists = asset.phases.Exists(p => p.phaseNumber == currentPhaseNum);
+                    
                     string phaseTitleStr = phaseMatch.Groups[2].Value.Trim();
                     if (string.IsNullOrEmpty(phaseTitleStr)) phaseTitleStr = trimmed;
 
-                    currentPhase = new WorkflowPhaseData
+                    if (!phaseExists)
                     {
-                        phaseNumber = currentPhaseNum,
-                        phaseTitle = $"Section {currentPhaseNum}: {phaseTitleStr}"
-                    };
-                    asset.phases.Add(currentPhase);
+                        currentPhase = new WorkflowPhaseData
+                        {
+                            phaseNumber = currentPhaseNum,
+                            phaseTitle = $"Section {currentPhaseNum}: {phaseTitleStr}"
+                        };
+                        asset.phases.Add(currentPhase);
+                    }
+
+                    // Count existing steps in this phase to generate a unique step id
+                    int stepsInPhase = asset.steps.FindAll(s => s.phaseNumber == currentPhaseNum).Count;
 
                     currentStep = new WorkflowStepData
                     {
-                        id = $"Step_{currentPhaseNum}_1",
+                        id = $"Step_{currentPhaseNum}_{stepsInPhase + 1}",
                         phaseNumber = currentPhaseNum,
-                        stepTitle = $"Step {currentPhaseNum}.1: {phaseTitleStr}",
+                        stepTitle = $"Step {currentPhaseNum}.{stepsInPhase + 1}: {phaseTitleStr}",
                         description = $"Tutorial section {currentPhaseNum} steps and timestamps."
                     };
 
@@ -265,6 +258,27 @@ Section 3: Audio & Haptic Vibrations
                 Match tsMatch = timestampRegex.Match(trimmed);
                 if (tsMatch.Success)
                 {
+                    if (creatorBreakdown == null)
+                    {
+                        // Fallback if timestamps appear before any phase
+                        currentPhaseNum = fallbackPhaseNum++;
+                        currentPhase = new WorkflowPhaseData { phaseNumber = currentPhaseNum, phaseTitle = $"Section {currentPhaseNum}: General Setup & Overview" };
+                        asset.phases.Add(currentPhase);
+                        currentStep = new WorkflowStepData
+                        {
+                            id = $"Step_{currentPhaseNum}_1",
+                            phaseNumber = currentPhaseNum,
+                            stepTitle = $"Step {currentPhaseNum}.1: Core Tutorial Steps & Timestamps",
+                            description = "Follow along with the timestamped steps below."
+                        };
+                        creatorBreakdown = new CreatorBreakdownData
+                        {
+                            creatorName = creatorName,
+                            videoTitle = videoTitle,
+                            githubUrl = githubRepoUrl
+                        };
+                    }
+
                     int totalSeconds = ConvertTimestampToSeconds(tsMatch);
 
                     int hours = 0, minutes = 0, seconds = 0;
@@ -287,7 +301,7 @@ Section 3: Audio & Haptic Vibrations
                 }
             }
 
-            if (creatorBreakdown.timestamps.Count > 0)
+            if (currentStep != null && creatorBreakdown != null && creatorBreakdown.timestamps.Count > 0)
             {
                 currentStep.creatorBreakdowns.Add(creatorBreakdown);
                 asset.steps.Add(currentStep);
