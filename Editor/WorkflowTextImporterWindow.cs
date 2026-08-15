@@ -108,13 +108,15 @@ Section 3: Audio & Haptic Vibrations
             EditorGUILayout.Space(15);
             EditorGUILayout.LabelField("Paste Raw Text Here (Timestamps, Markdown, AI Output):", EditorStyles.boldLabel);
 
+            EditorGUILayout.BeginVertical(GUI.skin.box);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(250));
             rawText = EditorGUILayout.TextArea(rawText, GUILayout.ExpandHeight(true));
             EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
 
             EditorGUILayout.Space(20);
             
-            GUI.backgroundColor = new Color(0.2f, 0.8f, 0.2f);
+            GUI.backgroundColor = new Color(156f / 255f, 195f / 255f, 1f);
             if (GUILayout.Button("⚡ Generate Workflow Guide Asset", GUILayout.Height(42)))
             {
                 GenerateAssetFromRawText();
@@ -123,10 +125,28 @@ Section 3: Audio & Haptic Vibrations
             
             EditorGUILayout.Space(10);
             
-            if (GUILayout.Button("Load Demo Format", GUILayout.Height(30)))
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Load Format Example into Importer Box", GUILayout.Height(30)))
             {
                 LoadDemoFormat();
             }
+            if (GUILayout.Button("Clear Box", GUILayout.Height(30), GUILayout.Width(100)))
+            {
+                ClearBox();
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void ClearBox()
+        {
+            guideTitle = "";
+            creatorName = "";
+            videoTitle = "";
+            mainVideoUrl = "";
+            githubRepoUrl = "";
+            rawText = "";
+            GUI.FocusControl(null);
+            Repaint();
         }
 
         private void LoadDemoFormat()
@@ -160,7 +180,7 @@ Section 3: Audio & Haptic Vibrations
         {
             if (string.IsNullOrEmpty(rawText))
             {
-                EditorGUILayout.DisplayDialog("Error", "Please paste some raw text or timestamps first!", "OK");
+                EditorUtility.DisplayDialog("Error", "Please paste some raw text or timestamps first!", "OK");
                 return;
             }
 

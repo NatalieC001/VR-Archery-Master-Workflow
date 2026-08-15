@@ -457,6 +457,69 @@ namespace VRArcheryWorkflow.Editor
                 {
                     EditorPrefs.SetString(globalNotesKey, newNotes);
                 }
+
+                EditorGUILayout.Space(5);
+                string linkKey = $"VRArchery_Global_{step.id}_CustomLink";
+                string currentLink = EditorPrefs.GetString(linkKey, "");
+
+                EditorGUILayout.BeginHorizontal();
+                string newLink = EditorGUILayout.TextField("🔗 Link (Google Doc/URL):", currentLink);
+                if (newLink != currentLink) EditorPrefs.SetString(linkKey, newLink);
+
+                if (!string.IsNullOrEmpty(newLink))
+                {
+                    if (GUILayout.Button("Open Link", GUILayout.Width(80)))
+                    {
+                        Application.OpenURL(newLink);
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(5);
+                string imgKey = $"VRArchery_Global_{step.id}_ImagePath";
+                string currentImgPath = EditorPrefs.GetString(imgKey, "");
+                Texture2D loadedImg = null;
+
+                if (!string.IsNullOrEmpty(currentImgPath))
+                {
+                    loadedImg = AssetDatabase.LoadAssetAtPath<Texture2D>(currentImgPath);
+                }
+
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("🖼️ Reference Image:", GUILayout.Width(130));
+                Texture2D newImg = (Texture2D)EditorGUILayout.ObjectField(loadedImg, typeof(Texture2D), false);
+                EditorGUILayout.EndHorizontal();
+
+                if (newImg != loadedImg)
+                {
+                    if (newImg == null)
+                    {
+                        EditorPrefs.SetString(imgKey, "");
+                    }
+                    else
+                    {
+                        string newPath = AssetDatabase.GetAssetPath(newImg);
+                        EditorPrefs.SetString(imgKey, newPath);
+                    }
+                }
+
+                if (newImg != null)
+                {
+                    EditorGUILayout.Space(5);
+                    float safeHeight = Mathf.Max(1f, newImg.height);
+                    float aspect = (float)newImg.width / safeHeight;
+                    float displayWidth = Mathf.Max(1f, position.width - 150); // Account for sidebar and padding
+                    float displayHeight = displayWidth / aspect;
+
+                    if (displayHeight > 250) // Limit max height for thumbnails
+                    {
+                        displayHeight = 250;
+                        displayWidth = displayHeight * aspect;
+                    }
+
+                    Rect rect = GUILayoutUtility.GetRect(displayWidth, displayHeight);
+                    GUI.DrawTexture(rect, newImg, ScaleMode.ScaleToFit);
+                }
             }
             EditorGUILayout.EndVertical();
         }
@@ -524,10 +587,13 @@ namespace VRArcheryWorkflow.Editor
             EditorGUILayout.BeginHorizontal();
 
             // Main Step Checkbox
+            EditorGUI.BeginChangeCheck();
             bool newStatus = EditorGUILayout.Toggle(currentStatus, GUILayout.Width(20));
-            if (newStatus != currentStatus)
+            if (EditorGUI.EndChangeCheck())
             {
                 EditorPrefs.SetBool(step.id, newStatus);
+                GUI.FocusControl(null); // Clear focus to prevent state caching
+                Repaint();
             }
 
             // Step Title (100% SELECTABLE PLAIN TEXT)
@@ -664,6 +730,69 @@ namespace VRArcheryWorkflow.Editor
                 if (newStepNote != currentStepNote)
                 {
                     EditorPrefs.SetString(userNoteKey, newStepNote);
+                }
+
+                EditorGUILayout.Space(5);
+                string linkKey = $"VRArchery_{step.id}_CustomLink";
+                string currentLink = EditorPrefs.GetString(linkKey, "");
+
+                EditorGUILayout.BeginHorizontal();
+                string newLink = EditorGUILayout.TextField("🔗 Link (Google Doc/URL):", currentLink);
+                if (newLink != currentLink) EditorPrefs.SetString(linkKey, newLink);
+
+                if (!string.IsNullOrEmpty(newLink))
+                {
+                    if (GUILayout.Button("Open Link", GUILayout.Width(80)))
+                    {
+                        Application.OpenURL(newLink);
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(5);
+                string imgKey = $"VRArchery_{step.id}_ImagePath";
+                string currentImgPath = EditorPrefs.GetString(imgKey, "");
+                Texture2D loadedImg = null;
+
+                if (!string.IsNullOrEmpty(currentImgPath))
+                {
+                    loadedImg = AssetDatabase.LoadAssetAtPath<Texture2D>(currentImgPath);
+                }
+
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("🖼️ Reference Image:", GUILayout.Width(130));
+                Texture2D newImg = (Texture2D)EditorGUILayout.ObjectField(loadedImg, typeof(Texture2D), false);
+                EditorGUILayout.EndHorizontal();
+
+                if (newImg != loadedImg)
+                {
+                    if (newImg == null)
+                    {
+                        EditorPrefs.SetString(imgKey, "");
+                    }
+                    else
+                    {
+                        string newPath = AssetDatabase.GetAssetPath(newImg);
+                        EditorPrefs.SetString(imgKey, newPath);
+                    }
+                }
+
+                if (newImg != null)
+                {
+                    EditorGUILayout.Space(5);
+                    float safeHeight = Mathf.Max(1f, newImg.height);
+                    float aspect = (float)newImg.width / safeHeight;
+                    float displayWidth = Mathf.Max(1f, position.width - 150); // Account for sidebar and padding
+                    float displayHeight = displayWidth / aspect;
+
+                    if (displayHeight > 250) // Limit max height for thumbnails
+                    {
+                        displayHeight = 250;
+                        displayWidth = displayHeight * aspect;
+                    }
+
+                    Rect rect = GUILayoutUtility.GetRect(displayWidth, displayHeight);
+                    GUI.DrawTexture(rect, newImg, ScaleMode.ScaleToFit);
                 }
             }
             EditorGUILayout.EndVertical();
