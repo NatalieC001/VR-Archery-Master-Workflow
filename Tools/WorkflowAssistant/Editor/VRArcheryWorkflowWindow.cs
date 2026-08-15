@@ -524,10 +524,13 @@ namespace VRArcheryWorkflow.Editor
             EditorGUILayout.BeginHorizontal();
 
             // Main Step Checkbox
+            EditorGUI.BeginChangeCheck();
             bool newStatus = EditorGUILayout.Toggle(currentStatus, GUILayout.Width(20));
-            if (newStatus != currentStatus)
+            if (EditorGUI.EndChangeCheck())
             {
                 EditorPrefs.SetBool(step.id, newStatus);
+                GUI.FocusControl(null); // Clear focus to prevent state caching
+                Repaint();
             }
 
             // Step Title (100% SELECTABLE PLAIN TEXT)

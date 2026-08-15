@@ -488,8 +488,14 @@ Insights: [Key Insights, Gotchas & Component Warnings]
             EditorGUILayout.BeginHorizontal();
 
             // Main Step Toggle
+            EditorGUI.BeginChangeCheck();
             bool newStatus = EditorGUILayout.Toggle(currentStatus, GUILayout.Width(20));
-            if (newStatus != currentStatus) EditorPrefs.SetBool(key, newStatus);
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorPrefs.SetBool(key, newStatus);
+                GUI.FocusControl(null); // Clear focus to prevent state caching
+                Repaint();
+            }
 
             DrawSelectableField(step.stepTitle, stepTitleStyle, false);
             EditorGUILayout.EndHorizontal();
