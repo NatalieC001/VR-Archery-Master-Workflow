@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace GenericWorkflow.Editor
 {
+    [MovedFrom(true, sourceNamespace: "")]
     [Serializable]
     public class TimestampData
     {
@@ -13,6 +15,7 @@ namespace GenericWorkflow.Editor
         public string description = "";     // Description of what happens at this timestamp
     }
 
+    [MovedFrom(true, sourceNamespace: "")]
     [Serializable]
     public class CreatorBreakdownData
     {
@@ -23,6 +26,7 @@ namespace GenericWorkflow.Editor
         public List<TimestampData> timestamps = new List<TimestampData>();
     }
 
+    [MovedFrom(true, sourceNamespace: "")]
     [Serializable]
     public class WorkflowStepData
     {
@@ -34,6 +38,7 @@ namespace GenericWorkflow.Editor
         public List<CreatorBreakdownData> creatorBreakdowns = new List<CreatorBreakdownData>();
     }
 
+    [MovedFrom(true, sourceNamespace: "")]
     [Serializable]
     public class WorkflowPhaseData
     {
@@ -41,6 +46,7 @@ namespace GenericWorkflow.Editor
         public string phaseTitle = "Phase 1: Setup";
     }
 
+    [MovedFrom(true, sourceNamespace: "")]
     [Serializable]
     public class ResourceLinkData
     {
@@ -52,6 +58,7 @@ namespace GenericWorkflow.Editor
     /// ScriptableObject container storing modular tutorial guide data.
     /// Can be created via Assets -> Create -> Tools -> Workflow Guide Asset.
     /// </summary>
+    [MovedFrom(true, sourceNamespace: "")]
     [CreateAssetMenu(fileName = "NewWorkflowGuideAsset", menuName = "Tools/Workflow Guide Asset", order = 1)]
     public class WorkflowGuideAsset : ScriptableObject
     {
